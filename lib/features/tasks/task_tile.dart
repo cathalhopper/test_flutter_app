@@ -11,7 +11,7 @@ class TaskTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(
-        task.isComplete ? Icons.check_box : Icons.check_box_outline_blank,
+        task.status ? Icons.check_box : Icons.check_box_outline_blank,
       ),
       title: Text(task.title),
       onTap: onToggle,

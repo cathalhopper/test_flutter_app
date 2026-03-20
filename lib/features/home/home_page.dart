@@ -24,7 +24,10 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, AppRouter.tasks);
+                Navigator.pushNamed(
+                  context,
+                  AppRouter.tasks
+                );
               },
               child: const Text('Show Task List'),
             ),

@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:test_flutter_app/models/task.dart';
+import 'package:test_flutter_app/services/repositories/task_repository.dart';
 
 class CreateTaskDialog extends StatefulWidget {
-  const CreateTaskDialog({super.key});
+  const CreateTaskDialog({
+    super.key,
+    required this.householdId,
+    required this.createdBy,
+  });
+
+  final String householdId;
+  final String createdBy;
 
   @override
   State<CreateTaskDialog> createState() => _CreateTaskDialogState();
 }
 
 class _CreateTaskDialogState extends State<CreateTaskDialog> {
+  final _repo = TaskRepository();
   final _titleController = TextEditingController();
-  final _roomController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _roomIdController = TextEditingController();
   DateTime? _dueDate;
-  bool _isComplete = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
     _titleController.dispose();
-    _roomController.dispose();
+    _descriptionController.dispose();
+    _roomIdController.dispose();
     super.dispose();
   }
 
@@ -31,19 +41,31 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
     if (picked != null) setState(() => _dueDate = picked);
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     final title = _titleController.text.trim();
-    if (title.isEmpty) return;
-    Navigator.pop(
-      context,
-      Task(
-        id: DateTime.now().toIso8601String(),
+    final roomId = _roomIdController.text.trim();
+    if (title.isEmpty || roomId.isEmpty || _dueDate == null) return;
+
+    setState(() => _isSubmitting = true);
+    try {
+      final task = await _repo.createTask(
+        householdId: widget.householdId,
+        roomId: roomId,
+        createdBy: widget.createdBy,
         title: title,
-        room: _roomController.text.trim(),
-        dueDate: _dueDate,
-        isComplete: _isComplete,
-      ),
-    );
+        description: _descriptionController.text.trim(),
+        dueDate: _dueDate!,
+      );
+      if (mounted) Navigator.pop(context, task);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create task: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
   }
 
   @override
@@ -69,9 +91,18 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
               ),
               const SizedBox(height: 16),
               TextField(
-                controller: _roomController,
+                controller: _descriptionController,
                 decoration: const InputDecoration(
-                  labelText: 'Room',
+                  labelText: 'Description',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 2,
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _roomIdController,
+                decoration: const InputDecoration(
+                  labelText: 'Room ID',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -81,7 +112,7 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
                 icon: const Icon(Icons.calendar_today, size: 18),
                 label: Text(
                   _dueDate == null
-                      ? 'Set due date'
+                      ? 'Set due date (required)'
                       : 'Due: ${_dueDate!.year}-${_dueDate!.month.toString().padLeft(2, '0')}-${_dueDate!.day.toString().padLeft(2, '0')}',
                 ),
                 style: OutlinedButton.styleFrom(
@@ -89,26 +120,24 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                 ),
               ),
-              const SizedBox(height: 8),
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                title: const Text('Mark as complete'),
-                value: _isComplete,
-                onChanged: (v) => setState(() => _isComplete = v ?? false),
-                controlAffinity: ListTileControlAffinity.leading,
-              ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: _isSubmitting ? null : () => Navigator.pop(context),
                     child: const Text('Cancel'),
                   ),
                   const SizedBox(width: 8),
                   FilledButton(
-                    onPressed: _submit,
-                    child: const Text('Add'),
+                    onPressed: _isSubmitting ? null : _submit,
+                    child: _isSubmitting
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Add'),
                   ),
                 ],
               ),

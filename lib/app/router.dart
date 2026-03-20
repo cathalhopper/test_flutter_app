@@ -15,7 +15,13 @@ class AppRouter {
       case floorPlan:
         return MaterialPageRoute(builder: (_) => const FloorPlanPage());
       case tasks:
-        return MaterialPageRoute(builder: (_) => const TaskListPage());
+        final args = settings.arguments as Map<String, String>;
+        return MaterialPageRoute(
+          builder: (_) => TaskListPage(
+            householdId: args['householdId']!,
+            currentUserId: args['currentUserId']!,
+          ),
+        );
       default:
         return MaterialPageRoute(builder: (_) => const HomePage());
     }
