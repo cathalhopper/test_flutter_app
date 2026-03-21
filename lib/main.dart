@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:test_flutter_app/app/router.dart';
 import 'package:test_flutter_app/app/theme.dart';
+import 'package:test_flutter_app/features/household/household_list_page.dart';
 import 'package:test_flutter_app/services/supabase/supabase_client.dart';
 
 void main() async {
@@ -16,10 +17,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId = dotenv.env['TEST_USER_ID'] ?? '';
+
     return MaterialApp(
       title: 'Floor Plan App',
       theme: appTheme,
-      initialRoute: AppRouter.home,
+      home: HouseholdListPage(currentUserId: currentUserId),
       onGenerateRoute: AppRouter.generateRoute,
     );
   }

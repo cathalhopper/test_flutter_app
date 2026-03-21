@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:test_flutter_app/app/router.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    required this.householdId,
+    required this.householdName,
+    required this.currentUserId,
+  });
+
+  final String householdId;
+  final String householdName;
+  final String currentUserId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Home'),
+        title: Text(householdName),
       ),
       body: Center(
         child: Column(
@@ -26,7 +35,11 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(
                   context,
-                  AppRouter.tasks
+                  AppRouter.tasks,
+                  arguments: {
+                    'householdId': householdId,
+                    'currentUserId': currentUserId,
+                  },
                 );
               },
               child: const Text('Show Task List'),
