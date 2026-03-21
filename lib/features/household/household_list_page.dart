@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:test_flutter_app/app/router.dart';
 import 'package:test_flutter_app/models/household.dart';
+import 'package:test_flutter_app/services/auth/auth_service.dart';
 import 'package:test_flutter_app/services/repositories/household_repository.dart';
 
 class HouseholdListPage extends StatefulWidget {
@@ -43,6 +44,12 @@ class _HouseholdListPageState extends State<HouseholdListPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('My Households'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => AuthService().signOut(),
+          ),
+        ],
       ),
       body: FutureBuilder<List<Household>>(
         future: _householdsFuture,

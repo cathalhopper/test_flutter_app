@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:test_flutter_app/features/household/household_list_page.dart';
 import 'package:test_flutter_app/features/home/home_page.dart';
 import 'package:test_flutter_app/features/floor_plan/floor_plan_page.dart';
+import 'package:test_flutter_app/features/login/login_page.dart';
 import 'package:test_flutter_app/features/tasks/task_list_page.dart';
+import 'package:test_flutter_app/services/auth/auth_service.dart';
 
 class AppRouter {
+  static const String login = '/login';
   static const String households = '/';
   static const String home = '/home';
   static const String floorPlan = '/floor-plan';
@@ -12,11 +15,16 @@ class AppRouter {
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case login:
+        return MaterialPageRoute(builder: (_) => const LoginPage());
       case households:
         final args = settings.arguments as Map<String, String>?;
+        final userId = args?['currentUserId']
+            ?? AuthService().currentUser?.id
+            ?? '';
         return MaterialPageRoute(
           builder: (_) => HouseholdListPage(
-            currentUserId: args?['currentUserId'] ?? '',
+            currentUserId: userId,
           ),
         );
       case home:
