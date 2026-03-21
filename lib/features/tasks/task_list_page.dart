@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test_flutter_app/features/tasks/create_task_dialog.dart';
 import 'package:test_flutter_app/features/tasks/task_tile.dart';
 import 'package:test_flutter_app/models/task.dart';
-import 'package:test_flutter_app/services/repositories/task_repository.dart';
+import 'package:test_flutter_app/services/repositories/cached_task_repository.dart';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({
@@ -19,7 +19,7 @@ class TaskListPage extends StatefulWidget {
 }
 
 class _TaskListPageState extends State<TaskListPage> {
-  final _repo = TaskRepository();
+  final _repo = CachedTaskRepository();
   late Future<List<Task>> _tasksFuture;
 
   @override
