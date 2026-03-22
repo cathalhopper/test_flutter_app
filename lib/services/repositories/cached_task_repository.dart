@@ -8,12 +8,15 @@ import 'task_repository.dart';
 /// API on a miss. Writes always hit the API and update the cache in-place so
 /// subsequent reads remain consistent without an extra round trip.
 class CachedTaskRepository {
-  final TaskRepository _repo;
-  final TaskCache _cache;
-
-  CachedTaskRepository({TaskRepository? repo, TaskCache? cache})
+  CachedTaskRepository._({TaskRepository? repo, TaskCache? cache})
       : _repo = repo ?? TaskRepository(),
         _cache = cache ?? TaskCache();
+
+  static final CachedTaskRepository _instance = CachedTaskRepository._();
+  factory CachedTaskRepository() => _instance;
+
+  final TaskRepository _repo;
+  final TaskCache _cache;
 
   Future<List<Task>> getTasksByHousehold(String householdId) async {
     final cached = _cache.get(householdId);

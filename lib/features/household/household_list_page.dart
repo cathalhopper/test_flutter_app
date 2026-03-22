@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_flutter_app/app/route_args.dart';
 import 'package:test_flutter_app/app/router.dart';
 import 'package:test_flutter_app/models/household.dart';
 import 'package:test_flutter_app/services/auth/auth_service.dart';
@@ -30,11 +31,11 @@ class _HouseholdListPageState extends State<HouseholdListPage> {
     Navigator.pushNamed(
       context,
       AppRouter.home,
-      arguments: {
-        'householdId': household.id,
-        'householdName': household.name,
-        'currentUserId': widget.currentUserId,
-      },
+      arguments: HomeRouteArgs(
+        householdId: household.id,
+        householdName: household.name,
+        currentUserId: widget.currentUserId,
+      ),
     );
   }
 

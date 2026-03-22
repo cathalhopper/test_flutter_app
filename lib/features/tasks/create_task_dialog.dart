@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_flutter_app/services/repositories/task_repository.dart';
+import 'package:test_flutter_app/services/repositories/cached_task_repository.dart';
 
 class CreateTaskDialog extends StatefulWidget {
   const CreateTaskDialog({
@@ -16,7 +16,7 @@ class CreateTaskDialog extends StatefulWidget {
 }
 
 class _CreateTaskDialogState extends State<CreateTaskDialog> {
-  final _repo = TaskRepository();
+  final _repo = CachedTaskRepository();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _roomIdController = TextEditingController();

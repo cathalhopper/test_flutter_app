@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_flutter_app/app/route_args.dart';
 import 'package:test_flutter_app/app/router.dart';
 
 class HomePage extends StatelessWidget {
@@ -26,7 +27,14 @@ class HomePage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, AppRouter.floorPlan);
+                Navigator.pushNamed(
+                  context,
+                  AppRouter.floorPlan,
+                  arguments: FloorPlanRouteArgs(
+                    householdId: householdId,
+                    currentUserId: currentUserId,
+                  ),
+                );
               },
               child: const Text('Create Floor Plan'),
             ),
@@ -36,10 +44,10 @@ class HomePage extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   AppRouter.tasks,
-                  arguments: {
-                    'householdId': householdId,
-                    'currentUserId': currentUserId,
-                  },
+                  arguments: HouseholdRouteArgs(
+                    householdId: householdId,
+                    currentUserId: currentUserId,
+                  ),
                 );
               },
               child: const Text('Show Task List'),
