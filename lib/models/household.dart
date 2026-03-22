@@ -11,8 +11,8 @@ class Household {
 
   factory Household.fromJson(Map<String, dynamic> json) =>
       Household(
-        id: json['id'],
-        name: json['name'],
+        id: json['id'] as String,
+        name: json['name'] as String,
         createdAt: DateTime.parse(json['created_at']),
       );
 

@@ -8,7 +8,7 @@ class Task {
   final String title;
   final String description;
   final DateTime? dueDate;
-  bool status;
+  final bool status;
 
   Task({
     required this.id,
@@ -36,6 +36,31 @@ class Task {
             : null,
         status: json['status'] as bool? ?? false,
         createdAt: DateTime.parse(json['created_at'] as String),
+      );
+
+  Task copyWith({
+    String? id,
+    String? householdId,
+    String? roomId,
+    String? assignedTo,
+    String? createdBy,
+    String? title,
+    String? description,
+    DateTime? dueDate,
+    bool? status,
+    DateTime? createdAt,
+  }) =>
+      Task(
+        id: id ?? this.id,
+        householdId: householdId ?? this.householdId,
+        roomId: roomId ?? this.roomId,
+        assignedTo: assignedTo ?? this.assignedTo,
+        createdBy: createdBy ?? this.createdBy,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        dueDate: dueDate ?? this.dueDate,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
       );
 
   Map<String, dynamic> toJson() => {

@@ -47,7 +47,7 @@ class TaskCache {
     if (entry == null) return;
     _store[task.householdId] = _CacheEntry(
       List.unmodifiable([...entry.tasks, task]),
-      entry.fetchedAt,
+      DateTime.now(),
     );
   }
 
@@ -61,7 +61,7 @@ class TaskCache {
     ];
     _store[task.householdId] = _CacheEntry(
       List.unmodifiable(updated),
-      entry.fetchedAt,
+      DateTime.now(),
     );
   }
 
@@ -87,7 +87,7 @@ class TaskCache {
     final updated = entry.tasks.where((t) => t.id != taskId).toList();
     _store[householdId] = _CacheEntry(
       List.unmodifiable(updated),
-      entry.fetchedAt,
+      DateTime.now(),
     );
   }
 
