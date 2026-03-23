@@ -63,25 +63,27 @@ class TaskRepository {
   /// server-generated ID and timestamp.
   Future<Task> createTask({
     required String householdId,
-    required String roomId,
+    String? roomId,
     required String createdBy,
     required String title,
     required String description,
     required DateTime dueDate,
     String? assignedTo,
   }) async {
+    final row = <String, dynamic>{
+      'household_id': householdId,
+      'created_by': createdBy,
+      'assigned_to': assignedTo ?? createdBy,
+      'title': title,
+      'description': description,
+      'status': false,
+      'due_date': dueDate.toIso8601String().split('T').first,
+    };
+    if (roomId != null) row['room_id'] = roomId;
+
     final data = await _client
         .from('task')
-        .insert({
-          'household_id': householdId,
-          'room_id': roomId,
-          'created_by': createdBy,
-          'assigned_to': assignedTo ?? createdBy,
-          'title': title,
-          'description': description,
-          'status': false,
-          'due_date': dueDate.toIso8601String().split('T').first,
-        })
+        .insert(row)
         .select()
         .single();
 

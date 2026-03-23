@@ -27,8 +27,14 @@ class CachedTaskRepository {
     return tasks;
   }
 
-  Future<Task> getTaskById(String taskId) async =>
-      _cache.getTask(taskId) ?? await _repo.getTaskById(taskId);
+  Future<Task> getTaskById(String taskId) async {
+    final cached = _cache.getTask(taskId);
+    if (cached != null) return cached;
+
+    final task = await _repo.getTaskById(taskId);
+    _cache.upsertTask(task);
+    return task;
+  }
 
   Future<List<Task>> getTasksByRoom(
     String householdId,
@@ -39,7 +45,8 @@ class CachedTaskRepository {
     if (cached != null) {
       return cached.where((t) => t.roomId == roomId).take(limit).toList();
     }
-    return _repo.getTasksByRoom(householdId, roomId, limit: limit);
+    final all = await getTasksByHousehold(householdId);
+    return all.where((t) => t.roomId == roomId).take(limit).toList();
   }
 
   Future<List<Task>> getTasksByAssignee(
@@ -50,12 +57,13 @@ class CachedTaskRepository {
     if (cached != null) {
       return cached.where((t) => t.assignedTo == userId).toList();
     }
-    return _repo.getTasksByAssignee(householdId, userId);
+    final all = await getTasksByHousehold(householdId);
+    return all.where((t) => t.assignedTo == userId).toList();
   }
 
   Future<Task> createTask({
     required String householdId,
-    required String roomId,
+    String? roomId,
     required String createdBy,
     required String title,
     required String description,

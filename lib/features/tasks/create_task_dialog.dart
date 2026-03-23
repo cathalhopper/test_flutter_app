@@ -44,13 +44,23 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
   Future<void> _submit() async {
     final title = _titleController.text.trim();
     final roomId = _roomIdController.text.trim();
-    if (title.isEmpty || roomId.isEmpty || _dueDate == null) return;
+
+    final errors = <String>[];
+    if (title.isEmpty) errors.add('Task name is required.');
+    if (_dueDate == null) errors.add('Due date is required.');
+
+    if (errors.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errors.join(' '))),
+      );
+      return;
+    }
 
     setState(() => _isSubmitting = true);
     try {
       final task = await _repo.createTask(
         householdId: widget.householdId,
-        roomId: roomId,
+        roomId: roomId.isEmpty ? null : roomId,
         createdBy: widget.createdBy,
         title: title,
         description: _descriptionController.text.trim(),

@@ -1,7 +1,7 @@
 class Task {
   final String id;
   final String householdId;
-  final String roomId;
+  final String? roomId;
   final String assignedTo;
   final String createdBy;
   final DateTime createdAt;
@@ -13,7 +13,7 @@ class Task {
   Task({
     required this.id,
     required this.householdId,
-    required this.roomId,
+    this.roomId,
     required this.assignedTo,
     required this.createdBy,
     required this.title,
@@ -26,7 +26,7 @@ class Task {
   factory Task.fromJson(Map<String, dynamic> json) => Task(
         id: json['id'] as String,
         householdId: json['household_id'] as String,
-        roomId: json['room_id'] as String,
+        roomId: json['room_id'] as String?,
         assignedTo: json['assigned_to'] as String,
         createdBy: json['created_by'] as String,
         title: json['title'] as String,
