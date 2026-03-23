@@ -2,11 +2,11 @@ class Task {
   final String id;
   final String householdId;
   final String? roomId;
-  final String assignedTo;
+  final String? assignedTo;
   final String createdBy;
   final DateTime createdAt;
   final String title;
-  final String description;
+  final String? description;
   final DateTime? dueDate;
   final bool status;
 
@@ -14,10 +14,10 @@ class Task {
     required this.id,
     required this.householdId,
     this.roomId,
-    required this.assignedTo,
+    this.assignedTo,
     required this.createdBy,
     required this.title,
-    this.description = '',
+    this.description,
     this.dueDate,
     this.status = false,
     DateTime? createdAt,
@@ -27,10 +27,10 @@ class Task {
         id: json['id'] as String,
         householdId: json['household_id'] as String,
         roomId: json['room_id'] as String?,
-        assignedTo: json['assigned_to'] as String,
+        assignedTo: json['assigned_to'] as String?,
         createdBy: json['created_by'] as String,
         title: json['title'] as String,
-        description: json['description'] as String? ?? '',
+        description: json['description'] as String?,
         dueDate: json['due_date'] != null
             ? DateTime.parse(json['due_date'] as String)
             : null,

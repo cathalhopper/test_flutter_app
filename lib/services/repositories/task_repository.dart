@@ -66,16 +66,16 @@ class TaskRepository {
     String? roomId,
     required String createdBy,
     required String title,
-    required String description,
+    String? description,
     required DateTime dueDate,
     String? assignedTo,
   }) async {
     final row = <String, dynamic>{
       'household_id': householdId,
       'created_by': createdBy,
-      'assigned_to': assignedTo ?? createdBy,
+      'assigned_to': assignedTo,
       'title': title,
-      'description': description,
+      'description': ?description,
       'status': false,
       'due_date': dueDate.toIso8601String().split('T').first,
     };

@@ -66,7 +66,7 @@ class CachedTaskRepository {
     String? roomId,
     required String createdBy,
     required String title,
-    required String description,
+    String? description,
     required DateTime dueDate,
     String? assignedTo,
   }) async {

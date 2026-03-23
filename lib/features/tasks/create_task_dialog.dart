@@ -20,6 +20,7 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _roomIdController = TextEditingController();
+  final _assignedToController = TextEditingController();
   DateTime? _dueDate;
   bool _isSubmitting = false;
 
@@ -28,6 +29,7 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
     _titleController.dispose();
     _descriptionController.dispose();
     _roomIdController.dispose();
+    _assignedToController.dispose();
     super.dispose();
   }
 
@@ -44,6 +46,7 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
   Future<void> _submit() async {
     final title = _titleController.text.trim();
     final roomId = _roomIdController.text.trim();
+    final assignedTo = _assignedToController.text.trim();
 
     final errors = <String>[];
     if (title.isEmpty) errors.add('Task name is required.');
@@ -63,8 +66,9 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
         roomId: roomId.isEmpty ? null : roomId,
         createdBy: widget.createdBy,
         title: title,
-        description: _descriptionController.text.trim(),
+        description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
         dueDate: _dueDate!,
+        assignedTo: assignedTo.isEmpty ? null : assignedTo,
       );
       if (mounted) Navigator.pop(context, task);
     } catch (e) {
@@ -113,6 +117,14 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
                 controller: _roomIdController,
                 decoration: const InputDecoration(
                   labelText: 'Room ID',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _assignedToController,
+                decoration: const InputDecoration(
+                  labelText: 'Assign to (user ID)',
                   border: OutlineInputBorder(),
                 ),
               ),
